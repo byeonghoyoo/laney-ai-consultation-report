@@ -95,30 +95,3 @@ document.querySelectorAll('[data-zc-node]').forEach(button => button.addEventLis
   detail.querySelector('h3').textContent = item.title;
   detail.querySelector('p').textContent = item.text;
 }));
-
-function calculatePowerBudget() {
-  const powerInput = document.getElementById('zc-power');
-  const rateInput = document.getElementById('zc-rate');
-  const powerRaw = powerInput.value.trim();
-  const rateRaw = rateInput.value.trim();
-  const power = Number(powerRaw);
-  const rate = Number(rateRaw);
-  const powerValid = powerRaw !== '' && Number.isFinite(power) && power >= 0 && power <= 5000;
-  const rateValid = rateRaw !== '' && Number.isFinite(rate) && rate >= 0 && rate <= 10000;
-  powerInput.setAttribute('aria-invalid', String(!powerValid));
-  rateInput.setAttribute('aria-invalid', String(!rateValid));
-  document.getElementById('zc-cost-error').hidden = powerValid && rateValid;
-  const monthlyResult = document.getElementById('zc-monthly-power');
-  const annualResult = document.getElementById('zc-annual-power');
-  if (!powerValid || !rateValid) {
-    monthlyResult.textContent = '계산 보류';
-    annualResult.textContent = '—';
-    return;
-  }
-  const monthly = power / 1000 * 24 * 30 * rate;
-  const format = value => `${Math.round(value).toLocaleString('ko-KR')}원`;
-  monthlyResult.textContent = format(monthly);
-  annualResult.textContent = format(monthly * 12);
-}
-['zc-power','zc-rate'].forEach(id => document.getElementById(id).addEventListener('input', calculatePowerBudget));
-calculatePowerBudget();
